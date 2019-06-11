@@ -25,3 +25,6 @@
 
 (17)<funcao> ::= <tipo_funcao> <id> '(' <lista_parametro> '){' {<declaracao>} '}'
 
+
+
+(18)<cond_if> ::= 'if (' <comp_expressao> '){' <cond_if'>
