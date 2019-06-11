@@ -20,3 +20,5 @@
 (13)<op_soma> ::= <id>'+'<op_soma>|<numero>'+'<op_soma>
 
 (14)<calc_expressao> ::= <_id><operadores><_id> | <_id><operadores><numero> | <numero><operadores><num_or_id> | <numero><operadores><_id>
+
+ALOOOOOOOOOOLOOOOOOOOOOOOOOOOOOOO
