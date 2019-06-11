@@ -1,0 +1,22 @@
+(1)<digito> ::= [0123456789]
+(2)<letra> ::= [abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]
+
+(3)<sinal> ::= '-' | '+' 
+(4)<inteiro> ::= <digito><inteiro> | <digito> 
+(5)<float> ::= <inteiro>'.'<inteiro>
+
+(6)<numero> ::= <inteiro> | <float>
+
+(7)<tipos> ::= 'int' | 'float'
+
+(8)<_id> ::= '_'<id> | <letra><id>
+(9)<id> ::= <letra><id> | <digito><id> | '_'<id>
+
+(10)<operador_arit> ::= '+'|'*'|'/'|'-'
+(11)<comparador_rela> ::= '>'|'<'|'=='|'>='|'<='|'!='
+
+(12)<comp_expressao> ::= <_id><comparador><num_or_id> | <numero><comparador><num_or_id>| <numero><comparador><num_or_id>
+
+(13)<op_soma> ::= <id>'+'<op_soma>|<numero>'+'<op_soma>
+
+(14)<calc_expressao> ::= <_id><operadores><_id> | <_id><operadores><numero> | <numero><operadores><num_or_id> | <numero><operadores><_id>
