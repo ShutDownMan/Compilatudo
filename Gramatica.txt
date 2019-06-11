@@ -7,7 +7,7 @@
 
 (6)<numero> ::= <inteiro> | <float>
 
-(7)<tipos> ::= 'int' | 'float'
+(7)<tipo> ::= 'int' | 'float'
 
 (8)<_id> ::= '_'<id> | <letra><id>
 (9)<id> ::= <letra><id> | <digito><id> | '_'<id>
@@ -15,10 +15,13 @@
 (10)<operador_arit> ::= '+'|'*'|'/'|'-'
 (11)<comparador_rela> ::= '>'|'<'|'=='|'>='|'<='|'!='
 
-(12)<comp_expressao> ::= <_id><comparador><num_or_id> | <numero><comparador><num_or_id>| <numero><comparador><num_or_id>
+(12)<num_id> ::= <numero> | <_id>
 
-(13)<op_soma> ::= <id>'+'<op_soma>|<numero>'+'<op_soma>
+(13)<comp_expressao> ::= <num_or_id><comparador><num_or_id>
 
-(14)<calc_expressao> ::= <_id><operadores><_id> | <_id><operadores><numero> | <numero><operadores><num_or_id> | <numero><operadores><_id>
+(15)<calc_expressao> ::= <num_ou_id><operador_arit><num_ou_id>
 
-https://drive.google.com/drive/folders/1zewzGQLMjujHvcU6uVm0l3J_2WDLRVGZ
+(16)<declaracao> ::= <comando>';'
+
+(17)<funcao> ::= <tipo_funcao> <id> '(' <lista_parametro> '){' {<declaracao>} '}'
+
