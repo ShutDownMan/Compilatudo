@@ -17,14 +17,18 @@
 
 (12)<num_id> ::= <numero> | <_id>
 
-(13)<comp_expressao> ::= <num_or_id><comparador><num_or_id>
+(13)<comp_expressao> ::= <num_or_id> <comparador> <num_or_id>
 
-(15)<calc_expressao> ::= <num_ou_id><operador_arit><num_ou_id>
+(15)<calc_expressao> ::= <num_ou_id> <operador_arit> <num_ou_id>
 
-(16)<declaracao> ::= <comando>';'
+(16)<declaracao> ::= <comando> ';'
 
 (17)<funcao> ::= <tipo_funcao> <id> '(' <lista_parametro> '){' {<declaracao>} '}'
 
+<<<<<<< HEAD
 
 
 (18)<cond_if> ::= 'if (' <comp_expressao> '){' <cond_if'>
+=======
+(18)<atribuição> ::= <_id>'='<calc_expressão>
+>>>>>>> ac3bd54146a316be14e7a5ae00eb29b73dd810f1
