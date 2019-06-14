@@ -25,10 +25,7 @@
 
 (17)<funcao> ::= <tipo_funcao> <id> '(' <lista_parametro> '){' {<declaracao>} '}'
 
-<<<<<<< HEAD
+(18)<cond_if> ::= 'if (' <comp_expressao> '){' <corpo> '}'<else>
+<else> ::= 'else {' <corpo> '}' | E
 
-
-(18)<cond_if> ::= 'if (' <comp_expressao> '){' <cond_if'>
-=======
-(18)<atribuição> ::= <_id>'='<calc_expressão>
->>>>>>> ac3bd54146a316be14e7a5ae00eb29b73dd810f1
+(19)<atribuição> ::= <_id>'='<calc_expressão>
