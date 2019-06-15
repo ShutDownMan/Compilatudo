@@ -1,0 +1,271 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  static = false;
+  OUTPUT_DIRECTORY = "./../src/CCompiler/";
+}
+
+PARSER_BEGIN(Gramatica)
+package CCompiler;
+
+import java.util.Scanner;
+
+public class Gramatica
+{
+  public static void main(String args []) throws ParseException
+  {
+    Scanner scan = new Scanner(System.in);
+    String nome_arquivo;
+    System.out.println("Entre com o nome do Arquivo ");
+    Gramatica parser = null;
+	nome_arquivo = scan.nextLine();
+
+	try {
+		parser = new Gramatica(new java.io.FileInputStream(nome_arquivo));
+	}catch(java.io.FileNotFoundException e) {
+	  System.out.println(e);
+	}
+
+	Token aux = null;
+	aux = parser.getNextToken();
+	
+    while (aux.kind != EOF)
+   	{
+   	  System.out.println(aux + ": " + im(aux.kind));
+   	  aux = parser.getNextToken();
+   	}
+
+   	if(parser.token_source.foundLexError() != 0) {
+   	  System.out.println("Total de ERROS: " + parser.token_source.foundLexError());
+   	}else {
+   	  System.out.println("Sem ERROS!");
+   	}
+
+   	scan.close();
+  }
+
+  static public String im(int x)
+  {
+	int k;
+	String s;
+	s = tokenImage[x];
+	k = s.lastIndexOf("\"");
+
+	try { s = s.substring(1,k); }
+	catch(StringIndexOutOfBoundsException e) { }
+
+	return s;
+  }
+}
+
+PARSER_END(Gramatica)
+
+TOKEN_MGR_DECLS:
+{
+ int countLexError = 0;
+
+ public int foundLexError()
+ {
+	return countLexError;
+ }
+}
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+| "\f"
+}
+
+TOKEN :
+{
+  < INT : "int" >
+| < IF : "if" >
+| < FLOAT: "float" >
+| < ELSE: "else" >
+| < RETURN: "return" >
+| < MAIN: "main" >
+| < WHILE: "while" >
+| < VOID: "void" >
+| < CHAR: "char" >
+| < FOR: "for" >
+| < DOUBLE: "double" >
+}
+
+TOKEN : /* OPERATORS */
+{
+  < ASSIGN: "=" >
+| < GT: ">" >
+| < LT: "<" >
+| < EQ: "==" >
+| < LE: "<=" >
+| < GE: ">=" >
+| < NE: "!=" >
+| < PLUS : "+" >
+| < MINUS : "-" >
+| < MULTIPLY : "*" >
+| < DIVIDE : "/" >
+| < ADRESS: "&" >
+}
+
+TOKEN: /*LOGICAL*/
+{
+  < AND: "&&" >
+| < OR: "||" >
+}
+
+TOKEN:
+{
+  < LPAREN: "(" >
+| < RPAREN: ")" >
+| < LBRACE: "{" >
+| < RBRACE: "}" >
+| < LBRACKET: "[" >
+| < RBRACKET: "]" >
+| < SEMICOLON: ";" >
+| < COMMA: "," >
+| < DOT: "." >
+| < HASHTAG: "#" >
+}
+
+TOKEN :
+{
+  < int_constant : (< DIGIT >)+ | ((["0"-"7"])+ ["o", "O"]) | (< DIGIT > (["0"-"7", "A"-"F", "a"-"f"])*["h","H"]) | ((["0"-"1"])+ ["b", "B"]) >  
+| < float_constant: (< DIGIT >)+ "." (<DIGIT >)+ >
+| < null_constant: "NULL" >
+| < string_constant: "\""( ~["\"", "\r", "\n"])* "\"" >
+}
+
+TOKEN:
+{
+  < IDENT: < LETTER > (< LETTER >|< DIGIT >)* >
+| < #LETTER: ["A"-"Z", "a"-"z", "_", "$"] >
+| < #DIGIT: [ "0"-"9" ] >
+}
+
+SKIP:
+{
+	"/*" : multicomentario
+}
+
+< multicomentario > SKIP:
+{
+  "*/": DEFAULT
+| < ~[] >
+}
+
+SKIP:
+{
+	"//": unicomentario
+}
+
+< unicomentario > SKIP:
+{
+  < ["\n", "\r"] >: DEFAULT
+| < ~[] >
+}
+
+SPECIAL_TOKEN:
+{
+< INVALID_LEXICAL:
+(~ ["a"-"z", "A"-"Z",
+	"0"-"9",
+	"\"",
+	"(",
+	")",
+	"[",
+	"]",
+	"{",
+	"}",
+	";",
+	",",
+	".",
+	"=",
+	">",
+	"<",
+	"!",
+	"+",
+	"-",
+	"/",
+	"*",
+	"&",
+	" ",
+	"\t",
+	"\r",
+	"\n",
+	"\f"
+])+ ((< LETTER >)+ | (< DIGIT >)+) >
+	{
+	  	System.err.println("Linha: " + input_stream.getEndLine() + " - String Invalida: " + image);
+	  	countLexError++;
+	}
+|
+	< INVALID_CONST: "\"" (~ ["\r", "\n", "\""])* ["\r", "\n"] >
+	{
+	  System.err.println("Linha: " + input_stream.getEndLine() + " - String constante Invalida: " + image);
+	  countLexError++;
+	}
+|
+	< INVALID_IDCONST: (< DIGIT >)+(< LETTER >)+>
+	{
+	  System.err.println("Linha: " + input_stream.getEndLine() + " - Identificador/Constante errado: " + image);
+	  countLexError++;
+	}  
+}
+
+int one_line() :
+{}
+{
+  sum() ";"
+  {
+    return 0;
+  }
+| ";"
+  {
+    return 1;
+  }
+}
+
+void sum() :
+{}
+{
+  term()
+  (
+    (
+      < PLUS >
+    | < MINUS >
+    )
+    term()
+  )*
+}
+
+void term() :
+{}
+{
+  unary()
+  (
+    (
+      < MULTIPLY >
+    | < DIVIDE >
+    )
+    unary()
+  )*
+}
+
+void unary() :
+{}
+{
+  < MINUS > element()
+| element()
+}
+
+void element() :
+{}
+{
+  < int_constant >
+| "(" sum() ")"
+}
