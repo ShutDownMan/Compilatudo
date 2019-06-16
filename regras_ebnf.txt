@@ -1,0 +1,64 @@
+<id> ::= <letter>(<LETTER>|<DIGIT>)*
+<letter> ::= [ "A"-"Z", "a"-"z", "_", "$" ]
+<digit> ::= [ "0"-"9" ]
+
+< string_constant> ::= "\""( ~["\"", "\r", "\n"])* "\""
+
+<program> ::= ( <preprocessor> | <var_decl> | <func_decl>)
+
+<preprocessor> ::= "#include<"<path>">" | "#include\""<path>"\"" | "#define" <id> <id>
+<path> ::= <id> ("\/"<id>)* "."<id>
+
+<var_decl> ::= <var_type> (<var_attr> | <id>) ("," (<var_attr> | <id>))* ";"
+<var_type> ::= <int> | <double> | <char> | <float>
+<var_attr> ::= <id> = <expr_value>
+
+<expr_value> ::=	( <unary_operator>)?
+									( <num_const>
+									| <var_attr> | <func_call> | <id>
+								    | <string_constant>
+								    | <char_constant>
+								    | "(" <expr_value> ")" )
+								    (<unary_operator>)?
+								    (<binary_operator> <expr_value>)?
+
+<unary_operator> ::= "++" | "--"
+
+<num_const> ::=   ("+"|"-")? (<int_constant > | < float_constant > | < char_constant >)
+
+<func_call> ::= <id> "(" <expr_list> ")"
+
+<expr_list> ::= <expr_value> ("," <expr_value> )*
+
+<binary_operator> ::=	"+" | "-" | "*" | "/" |"%"
+												| "+=" | "-=" | "*=" | "/=" | "%="
+												| "<<" | ">>"
+												| ">" | "<" | "==" | "<=" | ">=" | "!="
+												| "&&" | "||"
+
+<func_decl> ::=	<func_type> (<id> | "main") "(" (<parameter_list>)? ")" "{"
+								<body>
+								(<return_val>)?
+								"}"
+
+<func_type> ::= <int> | <double> | <char> | <float> | <void>
+
+<parameter_list> ::= <var_type> <id> ("," <var_type> <id>)*
+
+<body> ::= (<var_decl> | <comando> | <desvio>)*
+
+<comando> ::= 	<expr_value> ";"
+
+<desvio> ::=  <if_cond> | <while_cond> | <for_cond>
+
+<if_cond> ::=	"if" "(" <expr_value>")" "{"
+							<body>
+							"}"
+
+<while_cond> ::=	"while" "(" <expr_value> ")" "{"
+									<body>
+									"}"
+
+<for_cond> ::= 	"for"  "(" <expr_list> ";" <expr_list> ";" <expr_list> ")" "{"
+								<body>
+								"}"

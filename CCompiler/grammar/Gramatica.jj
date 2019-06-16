@@ -165,7 +165,7 @@ TOKEN:
 TOKEN :
 {
   < int_constant : (< DIGIT >)+ | ((["0"-"7"])+ ["o", "O"]) | (< DIGIT > (["0"-"7", "A"-"F", "a"-"f"])*["h","H"]) | ((["0"-"1"])+ ["b", "B"]) >
-| < float_constant: (< DIGIT >)+ "." (<DIGIT >)+ >
+| < float_constant: (< DIGIT >)+ <DOT> (<DIGIT >)+ >
 | < null_constant: "NULL" >
 | < char_constant: "\'" (~["\'","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"])) "\'">
 | < string_constant: "\""( ~["\"", "\r", "\n"])* "\"" >
@@ -280,7 +280,7 @@ void func_type(): { }
 
 void parameter_list(): { }
 {
-    var_type() <ID> ("," parameter_list())?
+    var_type() <ID> ("," var_type() <ID>)*
 }
 
 void body(): { }
@@ -295,8 +295,7 @@ void decl(): { }
 
 void comando(): { }
 {
-	LOOKAHEAD(2)func_call() <SEMICOLON>
-	| LOOKAHEAD(2)var_attr() <SEMICOLON>
+	expr_value() <SEMICOLON>
 }
 
 void desvio(): { }
@@ -359,7 +358,7 @@ void expr_value(): { }
 
 void var_decl(): {}
 {
-	var_type() (LOOKAHEAD(2)var_attr() | <ID> ) (< COMMA > var_attr())* <SEMICOLON>
+	var_type() (LOOKAHEAD(2)var_attr() | <ID> ) (< COMMA > (LOOKAHEAD(2)var_attr() | <ID> ))* <SEMICOLON>
 }
 
 void binary_operator(): {}
@@ -386,7 +385,6 @@ void return_val(): { }
 void unary_operator(): { }
 {
 	<INC> | <DEC>
-
 }
 
 /*void func(): { }
