@@ -6,6 +6,7 @@ options
   STATIC = false;
   OUTPUT_DIRECTORY = "./../src/CCompiler/";
   DEBUG_LOOKAHEAD = true;
+  FORCE_LA_CHECK = true;
 }
 
 PARSER_BEGIN(Gramatica)
@@ -47,19 +48,16 @@ public class Gramatica
    	}*/
 
    	try {
-
    	  parser.program();
    	}
    	catch(ParseException e) {
 		System.err.println(e.getMessage());
 		parser.contParseError = 1;
-   	}
-
-	finally {
+   	} finally {
 	   	if(parser.token_source.foundLexError() != 0) {
-	   	  System.out.println("Total de ERROS: " + parser.token_source.foundLexError());
+	   	  System.out.println("Total de erros lexicos: " + parser.token_source.foundLexError());
 	   	}else {
-	   	  System.out.println("Sem ERROS!");
+	   	  System.out.println("Sem erros lexicos!");
 	   	}
     }
 
@@ -114,8 +112,6 @@ TOKEN :
 | < CHAR: "char" >
 | < FOR: "for" >
 | < DOUBLE: "double" >
-| < PRINT: "printf" >
-| < SCANF: "scanf" >
 }
 
 TOKEN : /* OPERATORS */
@@ -131,7 +127,10 @@ TOKEN : /* OPERATORS */
 | < MINUS : "-" >
 | < MULTIPLY : "*" >
 | < DIVIDE : "/" >
+| < MOD : "%" >
 | < ADRESS: "&" >
+| < LEFT_SHIFT: ">>" >
+| < RIGHT_SHIFT: "<<" >
 }
 
 TOKEN: /*LOGICAL*/
@@ -165,7 +164,7 @@ TOKEN :
 
 TOKEN:
 {
-  < IDENT: < LETTER > (< LETTER >|< DIGIT >)* >
+  < ID: < LETTER > (< LETTER >|< DIGIT >)* >
 | < #LETTER: ["A"-"Z", "a"-"z", "_", "$"] >
 | < #DIGIT: [ "0"-"9" ] >
 }
@@ -242,60 +241,129 @@ SPECIAL_TOKEN:
 
 void program(): { }
 {
-   main()
+    ( LOOKAHEAD(3)var_decl()
+    | LOOKAHEAD(3)func_decl())*
 }
 
-void main(): { }
+void func_decl(): { }
 {
-  < INT > "main" < LPAREN > < RPAREN > < LBRACE >
-  corpo()
-  < RBRACE >
+  func_type() (<ID> | <MAIN>) <LPAREN> (parameter_list())? <RPAREN> <LBRACE>
+  body()
+  (return_val())?
+  <RBRACE>
 }
 
-void corpo(): { }
+void func_type(): { }
 {
-	( vardecl() | whilecond() | chamada_func())
-	corpo()
+    <INT> | <DOUBLE> | <CHAR> | <FLOAT> | <VOID>
 }
 
-void chamada_func(): { }
+void parameter_list(): { }
 {
-	(< IDENT > | < PRINT > | < SCANF >) < LPAREN > /*passada_param()*/ < RPAREN > < SEMICOLON >
+    var_type() <ID> ("," parameter_list())?
 }
 
-void tipos(): { }
+void body(): { }
 {
-  (< INT > | < DOUBLE > | < CHAR > | < FLOAT > | < IDENT >)
+	(decl() | comando() | desvio())*
+}
+
+void decl(): { }
+{
+	var_decl()
+}
+
+void comando(): { }
+{
+	LOOKAHEAD(2)func_call() <SEMICOLON>
+	| var_attr() <SEMICOLON>
+}
+
+void desvio(): { }
+{
+    ifcond()
+	| whilecond()
+}
+
+void var_attr():{}
+{
+    <ID> <ASSIGN> expr_value()
+}
+
+void func_call(): { }
+{
+	<ID> <LPAREN> arg_list() <RPAREN>
+}
+
+void arg_list() : {}
+{
+    expr_value() ("," expr_value() )*
+}
+
+void var_type(): { }
+{
+  < INT > | < DOUBLE > | < CHAR > | < FLOAT >
 }
 
 void whilecond(): { }
 {
-	< WHILE > < LPAREN > comp_expressao() < RPAREN > < LBRACE >
-	corpo()
+	< WHILE > < LPAREN > comp_expression() < RPAREN > < LBRACE >
+	body()
 	< RBRACE >
 }
 
-void comp_expressao(): {}
+void comp_expression(): {}
 {
-	(<IDENT> | valor() ) comparador() (< IDENT > | valor())
-    (("&&" | "||" ) comp_expressao())?
-}
-
-void valor(): { }
-{
-  ( <int_constant > | < float_constant > | < char_constant >)
+	expr_value() (comparador() expr_value())?
+	(combinational() comp_expression())?
 }
 
 void comparador(): { }
 {
-	( < GT>  | < LT> | < EQ> | < LE> | < GE > | < NE > )
+	< GT> | < LT> | < EQ> | < LE> | < GE > | < NE >
 }
 
-void vardecl(): {}
+void combinational(): { }
 {
-	(tipos()) < IDENT > ( < ASSIGN > ("+"|"-")? (valor()))?
-	(< COMMA > <IDENT >  ( < ASSIGN > ("+"|"-")? (valor()))?)*
-	< SEMICOLON >
+	<AND> | <OR>
+}
+
+void num_const(): { }
+{
+  ("+"|"-")? (<int_constant > | < float_constant > | < char_constant >)
+}
+
+void expr_value(): { }
+{
+    ( num_const()
+    | LOOKAHEAD(2)var_attr() | LOOKAHEAD(2)func_call() | <ID>
+    | <LPAREN> expr_value() <RPAREN>
+    )
+    (LOOKAHEAD(2)num_operator() expr_value())?
+}
+
+void var_decl(): {}
+{
+	var_type() (var_attr())? (< COMMA > var_attr())* <SEMICOLON>
+}
+
+void num_operator(): {}
+{
+    <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> | <MOD>
+    | <LEFT_SHIFT> | <RIGHT_SHIFT>
+
+}
+
+void ifcond(): {}
+{
+	<IF> <LPAREN> comp_expression() <RPAREN> <LBRACE>
+	body()
+	< RBRACE >
+}
+
+void return_val(): { }
+{
+    <RETURN> (expr_value())? <SEMICOLON>
 }
 
 /*void func(): { }
@@ -303,56 +371,3 @@ void vardecl(): {}
 	(
 
 }*/
-
-int one_line() :
-{}
-{
-  sum() ";"
-  {
-    return 0;
-  }
-| ";"
-  {
-    return 1;
-  }
-}
-
-void sum() :
-{}
-{
-  term()
-  (
-    (
-      < PLUS >
-    | < MINUS >
-    )
-    term()
-  )*
-}
-
-void term() :
-{}
-{
-  unary()
-  (
-    (
-      < MULTIPLY >
-    | < DIVIDE >
-    )
-    unary()
-  )*
-}
-
-void unary() :
-{}
-{
-  < MINUS > element()
-| element()
-}
-
-void element() :
-{}
-{
-  < int_constant >
-| "(" sum() ")"
-}
