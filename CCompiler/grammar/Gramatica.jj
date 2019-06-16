@@ -126,10 +126,15 @@ TOKEN : /* OPERATORS */
 | < GE: ">=" >
 | < NE: "!=" >
 | < PLUS : "+" >
+| < PLUS_EQ : "+=" >
 | < MINUS : "-" >
+| < MINUS_EQ : "-=" >
 | < MULTIPLY : "*" >
+| < MULTIPLY_EQ : "*=" >
 | < DIVIDE : "/" >
+| < DIVIDE_EQ : "/=" >
 | < MOD : "%" >
+| < MOD_EQ : "%=" >
 | < ADRESS: "&" >
 | < LEFT_SHIFT: ">>" >
 | < RIGHT_SHIFT: "<<" >
@@ -308,10 +313,10 @@ void var_attr():{}
 
 void func_call(): { }
 {
-	<ID> <LPAREN> arg_list() <RPAREN>
+	<ID> <LPAREN> expr_list() <RPAREN>
 }
 
-void arg_list() : {}
+void expr_list() : {}
 {
     expr_value() ("," expr_value() )*
 }
@@ -330,7 +335,7 @@ void while_cond(): { }
 
 void for_cond(): { }
 {
-	<FOR> <LPAREN> expr_value() <SEMICOLON> expr_value() <SEMICOLON> expr_value() <RPAREN> <LBRACE>
+	<FOR> <LPAREN> expr_list() <SEMICOLON> expr_list() <SEMICOLON> expr_list() <RPAREN> <LBRACE>
 	body()
 	<RBRACE>
 }
@@ -342,13 +347,14 @@ void num_const(): { }
 
 void expr_value(): { }
 {
-    (unary())?
+    (unary_operator())?
     ( num_const()
     | LOOKAHEAD(2)var_attr() | LOOKAHEAD(2)func_call() | <ID>
     | <string_constant>
+    | <char_constant>
     | <LPAREN> expr_value() <RPAREN>)
-    (LOOKAHEAD(2)unary())?
-    (LOOKAHEAD(2)var_operator() expr_value())?
+    (LOOKAHEAD(2)unary_operator())?
+    (LOOKAHEAD(2)binary_operator() expr_value())?
 }
 
 void var_decl(): {}
@@ -356,9 +362,10 @@ void var_decl(): {}
 	var_type() (LOOKAHEAD(2)var_attr() | <ID> ) (< COMMA > var_attr())* <SEMICOLON>
 }
 
-void var_operator(): {}
+void binary_operator(): {}
 {
     <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> | <MOD>
+    | <PLUS_EQ> | <MINUS_EQ> | <MULTIPLY_EQ> | <DIVIDE_EQ> | <MOD_EQ>
     | <LEFT_SHIFT> | <RIGHT_SHIFT>
     | < GT> | < LT> | < EQ> | < LE> | < GE > | < NE >
     | <AND> | <OR>
@@ -376,7 +383,7 @@ void return_val(): { }
     <RETURN> (expr_value())? <SEMICOLON>
 }
 
-void unary(): { }
+void unary_operator(): { }
 {
 	<INC> | <DEC>
 

@@ -119,11 +119,11 @@ public class Gramatica implements GramaticaConstants {
       } else if (jj_2_4(3)) {
         jj_consume_token(HASHTAG);
         jj_consume_token(INCLUDE);
-        jj_consume_token(65);
+        jj_consume_token(70);
         jj_consume_token(ID);
         jj_consume_token(DOT);
         jj_consume_token(ID);
-        jj_consume_token(65);
+        jj_consume_token(70);
       } else if (jj_2_5(2)) {
         jj_consume_token(HASHTAG);
         jj_consume_token(DEFINE);
@@ -351,14 +351,14 @@ public class Gramatica implements GramaticaConstants {
 
       jj_consume_token(ID);
       jj_consume_token(LPAREN);
-      arg_list();
+      expr_list();
       jj_consume_token(RPAREN);
     } finally {
       trace_return("func_call");
     }
 }
 
-  final public void arg_list() throws ParseException {    try {
+  final public void expr_list() throws ParseException {    try {
 
       expr_value();
       label_3:
@@ -376,7 +376,7 @@ public class Gramatica implements GramaticaConstants {
         expr_value();
       }
     } finally {
-      trace_return("arg_list");
+      trace_return("expr_list");
     }
 }
 
@@ -427,11 +427,11 @@ public class Gramatica implements GramaticaConstants {
 
       jj_consume_token(FOR);
       jj_consume_token(LPAREN);
-      expr_value();
+      expr_list();
       jj_consume_token(SEMICOLON);
-      expr_value();
+      expr_list();
       jj_consume_token(SEMICOLON);
-      expr_value();
+      expr_list();
       jj_consume_token(RPAREN);
       jj_consume_token(LBRACE);
       body();
@@ -494,7 +494,7 @@ public class Gramatica implements GramaticaConstants {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case INC:
       case DEC:{
-        unary();
+        unary_operator();
         break;
         }
       default:
@@ -526,6 +526,10 @@ public class Gramatica implements GramaticaConstants {
             jj_consume_token(string_constant);
             break;
             }
+          case char_constant:{
+            jj_consume_token(char_constant);
+            break;
+            }
           case LPAREN:{
             jj_consume_token(LPAREN);
             expr_value();
@@ -540,12 +544,12 @@ public class Gramatica implements GramaticaConstants {
         }
       }
       if (jj_2_10(2)) {
-        unary();
+        unary_operator();
       } else {
         ;
       }
       if (jj_2_11(2)) {
-        var_operator();
+        binary_operator();
         expr_value();
       } else {
         ;
@@ -592,7 +596,7 @@ public class Gramatica implements GramaticaConstants {
     }
 }
 
-  final public void var_operator() throws ParseException {    try {
+  final public void binary_operator() throws ParseException {    try {
 
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case PLUS:{
@@ -613,6 +617,26 @@ public class Gramatica implements GramaticaConstants {
         }
       case MOD:{
         jj_consume_token(MOD);
+        break;
+        }
+      case PLUS_EQ:{
+        jj_consume_token(PLUS_EQ);
+        break;
+        }
+      case MINUS_EQ:{
+        jj_consume_token(MINUS_EQ);
+        break;
+        }
+      case MULTIPLY_EQ:{
+        jj_consume_token(MULTIPLY_EQ);
+        break;
+        }
+      case DIVIDE_EQ:{
+        jj_consume_token(DIVIDE_EQ);
+        break;
+        }
+      case MOD_EQ:{
+        jj_consume_token(MOD_EQ);
         break;
         }
       case LEFT_SHIFT:{
@@ -661,7 +685,7 @@ public class Gramatica implements GramaticaConstants {
         throw new ParseException();
       }
     } finally {
-      trace_return("var_operator");
+      trace_return("binary_operator");
     }
 }
 
@@ -706,7 +730,7 @@ public class Gramatica implements GramaticaConstants {
     }
 }
 
-  final public void unary() throws ParseException {    try {
+  final public void unary_operator() throws ParseException {    try {
 
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case INC:{
@@ -723,7 +747,7 @@ public class Gramatica implements GramaticaConstants {
         throw new ParseException();
       }
     } finally {
-      trace_return("unary");
+      trace_return("unary_operator");
     }
 }
 
@@ -823,71 +847,34 @@ public class Gramatica implements GramaticaConstants {
     finally { jj_save(11, xla); }
   }
 
-  private boolean jj_3R_14()
- {
-    if (!jj_rescan) trace_call("func_type(LOOKING AHEAD...)");
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(6)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(18)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(16)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(8)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(15)) { if (!jj_rescan) trace_return("func_type(LOOKAHEAD FAILED)"); return true; }
-    }
-    }
-    }
-    }
-    { if (!jj_rescan) trace_return("func_type(LOOKAHEAD SUCCEEDED)"); return false; }
-  }
-
-  private boolean jj_3R_12()
- {
-    if (!jj_rescan) trace_call("var_type(LOOKING AHEAD...)");
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(6)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(18)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(16)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(8)) { if (!jj_rescan) trace_return("var_type(LOOKAHEAD FAILED)"); return true; }
-    }
-    }
-    }
-    { if (!jj_rescan) trace_return("var_type(LOOKAHEAD SUCCEEDED)"); return false; }
-  }
-
-  private boolean jj_3R_7()
- {
-    if (!jj_rescan) trace_call("func_call(LOOKING AHEAD...)");
-    if (jj_scan_token(ID)) { if (!jj_rescan) trace_return("func_call(LOOKAHEAD FAILED)"); return true; }
-    if (jj_scan_token(LPAREN)) { if (!jj_rescan) trace_return("func_call(LOOKAHEAD FAILED)"); return true; }
-    { if (!jj_rescan) trace_return("func_call(LOOKAHEAD SUCCEEDED)"); return false; }
-  }
-
   private boolean jj_3R_10()
  {
-    if (!jj_rescan) trace_call("var_operator(LOOKING AHEAD...)");
+    if (!jj_rescan) trace_call("binary_operator(LOOKING AHEAD...)");
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(26)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(27)) {
-    jj_scanpos = xsp;
     if (jj_scan_token(28)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(29)) {
     jj_scanpos = xsp;
     if (jj_scan_token(30)) {
     jj_scanpos = xsp;
     if (jj_scan_token(32)) {
     jj_scanpos = xsp;
+    if (jj_scan_token(34)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(27)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(29)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(31)) {
+    jj_scanpos = xsp;
     if (jj_scan_token(33)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(35)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(37)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(38)) {
     jj_scanpos = xsp;
     if (jj_scan_token(20)) {
     jj_scanpos = xsp;
@@ -901,9 +888,9 @@ public class Gramatica implements GramaticaConstants {
     jj_scanpos = xsp;
     if (jj_scan_token(25)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(36)) {
+    if (jj_scan_token(41)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(37)) { if (!jj_rescan) trace_return("var_operator(LOOKAHEAD FAILED)"); return true; }
+    if (jj_scan_token(42)) { if (!jj_rescan) trace_return("binary_operator(LOOKAHEAD FAILED)"); return true; }
     }
     }
     }
@@ -918,7 +905,20 @@ public class Gramatica implements GramaticaConstants {
     }
     }
     }
-    { if (!jj_rescan) trace_return("var_operator(LOOKAHEAD SUCCEEDED)"); return false; }
+    }
+    }
+    }
+    }
+    }
+    { if (!jj_rescan) trace_return("binary_operator(LOOKAHEAD SUCCEEDED)"); return false; }
+  }
+
+  private boolean jj_3R_7()
+ {
+    if (!jj_rescan) trace_call("func_call(LOOKING AHEAD...)");
+    if (jj_scan_token(ID)) { if (!jj_rescan) trace_return("func_call(LOOKAHEAD FAILED)"); return true; }
+    if (jj_scan_token(LPAREN)) { if (!jj_rescan) trace_return("func_call(LOOKAHEAD FAILED)"); return true; }
+    { if (!jj_rescan) trace_return("func_call(LOOKAHEAD SUCCEEDED)"); return false; }
   }
 
   private boolean jj_3R_5()
@@ -929,7 +929,7 @@ public class Gramatica implements GramaticaConstants {
     xsp = jj_scanpos;
     if (jj_3_12()) {
     jj_scanpos = xsp;
-    if (jj_scan_token(53)) { if (!jj_rescan) trace_return("var_decl(LOOKAHEAD FAILED)"); return true; }
+    if (jj_scan_token(58)) { if (!jj_rescan) trace_return("var_decl(LOOKAHEAD FAILED)"); return true; }
     }
     while (true) {
       xsp = jj_scanpos;
@@ -939,24 +939,24 @@ public class Gramatica implements GramaticaConstants {
     { if (!jj_rescan) trace_return("var_decl(LOOKAHEAD SUCCEEDED)"); return false; }
   }
 
+  private boolean jj_3R_13()
+ {
+    if (jj_scan_token(COMMA)) return true;
+    return false;
+  }
+
   private boolean jj_3R_6()
  {
     if (!jj_rescan) trace_call("func_decl(LOOKING AHEAD...)");
     if (jj_3R_14()) { if (!jj_rescan) trace_return("func_decl(LOOKAHEAD FAILED)"); return true; }
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(53)) {
+    if (jj_scan_token(58)) {
     jj_scanpos = xsp;
     if (jj_scan_token(11)) { if (!jj_rescan) trace_return("func_decl(LOOKAHEAD FAILED)"); return true; }
     }
     if (jj_scan_token(LPAREN)) { if (!jj_rescan) trace_return("func_decl(LOOKAHEAD FAILED)"); return true; }
     { if (!jj_rescan) trace_return("func_decl(LOOKAHEAD SUCCEEDED)"); return false; }
-  }
-
-  private boolean jj_3R_13()
- {
-    if (jj_scan_token(COMMA)) return true;
-    return false;
   }
 
   private boolean jj_3_5()
@@ -970,7 +970,7 @@ public class Gramatica implements GramaticaConstants {
  {
     if (jj_scan_token(HASHTAG)) return true;
     if (jj_scan_token(INCLUDE)) return true;
-    if (jj_scan_token(65)) return true;
+    if (jj_scan_token(70)) return true;
     return false;
   }
 
@@ -1052,11 +1052,14 @@ public class Gramatica implements GramaticaConstants {
     jj_scanpos = xsp;
     if (jj_3_9()) {
     jj_scanpos = xsp;
-    if (jj_scan_token(53)) {
+    if (jj_scan_token(58)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(52)) {
+    if (jj_scan_token(57)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(56)) {
     jj_scanpos = xsp;
     if (jj_3R_17()) { if (!jj_rescan) trace_return("expr_value(LOOKAHEAD FAILED)"); return true; }
+    }
     }
     }
     }
@@ -1077,13 +1080,25 @@ public class Gramatica implements GramaticaConstants {
     return false;
   }
 
+  private boolean jj_3R_9()
+ {
+    if (!jj_rescan) trace_call("unary_operator(LOOKING AHEAD...)");
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(39)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(40)) { if (!jj_rescan) trace_return("unary_operator(LOOKAHEAD FAILED)"); return true; }
+    }
+    { if (!jj_rescan) trace_return("unary_operator(LOOKAHEAD SUCCEEDED)"); return false; }
+  }
+
   private boolean jj_3R_19()
  {
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(26)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(27)) return true;
+    if (jj_scan_token(28)) return true;
     }
     return false;
   }
@@ -1095,26 +1110,14 @@ public class Gramatica implements GramaticaConstants {
     xsp = jj_scanpos;
     if (jj_3R_19()) jj_scanpos = xsp;
     xsp = jj_scanpos;
-    if (jj_scan_token(48)) {
+    if (jj_scan_token(53)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(49)) {
+    if (jj_scan_token(54)) {
     jj_scanpos = xsp;
-    if (jj_scan_token(51)) { if (!jj_rescan) trace_return("num_const(LOOKAHEAD FAILED)"); return true; }
+    if (jj_scan_token(56)) { if (!jj_rescan) trace_return("num_const(LOOKAHEAD FAILED)"); return true; }
     }
     }
     { if (!jj_rescan) trace_return("num_const(LOOKAHEAD SUCCEEDED)"); return false; }
-  }
-
-  private boolean jj_3R_9()
- {
-    if (!jj_rescan) trace_call("unary(LOOKING AHEAD...)");
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_scan_token(34)) {
-    jj_scanpos = xsp;
-    if (jj_scan_token(35)) { if (!jj_rescan) trace_return("unary(LOOKAHEAD FAILED)"); return true; }
-    }
-    { if (!jj_rescan) trace_return("unary(LOOKAHEAD SUCCEEDED)"); return false; }
   }
 
   private boolean jj_3_9()
@@ -1127,6 +1130,45 @@ public class Gramatica implements GramaticaConstants {
  {
     if (jj_3R_8()) return true;
     return false;
+  }
+
+  private boolean jj_3R_14()
+ {
+    if (!jj_rescan) trace_call("func_type(LOOKING AHEAD...)");
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(6)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(18)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(16)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(8)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(15)) { if (!jj_rescan) trace_return("func_type(LOOKAHEAD FAILED)"); return true; }
+    }
+    }
+    }
+    }
+    { if (!jj_rescan) trace_return("func_type(LOOKAHEAD SUCCEEDED)"); return false; }
+  }
+
+  private boolean jj_3R_12()
+ {
+    if (!jj_rescan) trace_call("var_type(LOOKING AHEAD...)");
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(6)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(18)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(16)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(8)) { if (!jj_rescan) trace_return("var_type(LOOKAHEAD FAILED)"); return true; }
+    }
+    }
+    }
+    { if (!jj_rescan) trace_return("var_type(LOOKAHEAD SUCCEEDED)"); return false; }
   }
 
   /** Generated Token Manager. */
@@ -1150,10 +1192,10 @@ public class Gramatica implements GramaticaConstants {
 	   jj_la1_init_2();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x58140,0x0,0x800,0x50140,0x400,0x58140,0x0,0x741c0,0x741c0,0x24080,0x0,0x50140,0xc000000,0xc000000,0x0,0x0,0xc000000,0x0,0x0,0x0,0x7ff00000,0xc000000,0x0,};
+	   jj_la1_0 = new int[] {0x58140,0x0,0x800,0x50140,0x400,0x58140,0x0,0x741c0,0x741c0,0x24080,0x0,0x50140,0x14000000,0x14000000,0x0,0x0,0x14000000,0x0,0x0,0x0,0xfff00000,0x14000000,0x0,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x8000,0x8000,0x200000,0x0,0x0,0x0,0x2000,0x200000,0x200000,0x0,0x2000,0x0,0x0,0x0,0xb0000,0xc,0xb0000,0x300040,0x200000,0x2000,0x33,0x3b004c,0xc,};
+	   jj_la1_1 = new int[] {0x100000,0x100000,0x4000000,0x0,0x0,0x0,0x40000,0x4000000,0x4000000,0x0,0x40000,0x0,0x0,0x0,0x1600000,0x180,0x1600000,0x7000800,0x4000000,0x40000,0x66f,0x7600980,0x180,};
 	}
 	private static void jj_la1_init_2() {
 	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
@@ -1371,7 +1413,7 @@ public class Gramatica implements GramaticaConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[66];
+	 boolean[] la1tokens = new boolean[71];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
@@ -1391,7 +1433,7 @@ public class Gramatica implements GramaticaConstants {
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 66; i++) {
+	 for (int i = 0; i < 71; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;

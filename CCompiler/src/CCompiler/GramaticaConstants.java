@@ -53,69 +53,79 @@ public interface GramaticaConstants {
   /** RegularExpression Id. */
   int PLUS = 26;
   /** RegularExpression Id. */
-  int MINUS = 27;
+  int PLUS_EQ = 27;
   /** RegularExpression Id. */
-  int MULTIPLY = 28;
+  int MINUS = 28;
   /** RegularExpression Id. */
-  int DIVIDE = 29;
+  int MINUS_EQ = 29;
   /** RegularExpression Id. */
-  int MOD = 30;
+  int MULTIPLY = 30;
   /** RegularExpression Id. */
-  int ADRESS = 31;
+  int MULTIPLY_EQ = 31;
   /** RegularExpression Id. */
-  int LEFT_SHIFT = 32;
+  int DIVIDE = 32;
   /** RegularExpression Id. */
-  int RIGHT_SHIFT = 33;
+  int DIVIDE_EQ = 33;
   /** RegularExpression Id. */
-  int INC = 34;
+  int MOD = 34;
   /** RegularExpression Id. */
-  int DEC = 35;
+  int MOD_EQ = 35;
   /** RegularExpression Id. */
-  int AND = 36;
+  int ADRESS = 36;
   /** RegularExpression Id. */
-  int OR = 37;
+  int LEFT_SHIFT = 37;
   /** RegularExpression Id. */
-  int LPAREN = 38;
+  int RIGHT_SHIFT = 38;
   /** RegularExpression Id. */
-  int RPAREN = 39;
+  int INC = 39;
   /** RegularExpression Id. */
-  int LBRACE = 40;
+  int DEC = 40;
   /** RegularExpression Id. */
-  int RBRACE = 41;
+  int AND = 41;
   /** RegularExpression Id. */
-  int LBRACKET = 42;
+  int OR = 42;
   /** RegularExpression Id. */
-  int RBRACKET = 43;
+  int LPAREN = 43;
   /** RegularExpression Id. */
-  int SEMICOLON = 44;
+  int RPAREN = 44;
   /** RegularExpression Id. */
-  int COMMA = 45;
+  int LBRACE = 45;
   /** RegularExpression Id. */
-  int DOT = 46;
+  int RBRACE = 46;
   /** RegularExpression Id. */
-  int HASHTAG = 47;
+  int LBRACKET = 47;
   /** RegularExpression Id. */
-  int int_constant = 48;
+  int RBRACKET = 48;
   /** RegularExpression Id. */
-  int float_constant = 49;
+  int SEMICOLON = 49;
   /** RegularExpression Id. */
-  int null_constant = 50;
+  int COMMA = 50;
   /** RegularExpression Id. */
-  int char_constant = 51;
+  int DOT = 51;
   /** RegularExpression Id. */
-  int string_constant = 52;
+  int HASHTAG = 52;
   /** RegularExpression Id. */
-  int ID = 53;
+  int int_constant = 53;
   /** RegularExpression Id. */
-  int LETTER = 54;
+  int float_constant = 54;
   /** RegularExpression Id. */
-  int DIGIT = 55;
+  int null_constant = 55;
   /** RegularExpression Id. */
-  int INVALID_LEXICAL = 62;
+  int char_constant = 56;
   /** RegularExpression Id. */
-  int INVALID_CONST = 63;
+  int string_constant = 57;
   /** RegularExpression Id. */
-  int INVALID_IDCONST = 64;
+  int ID = 58;
+  /** RegularExpression Id. */
+  int LETTER = 59;
+  /** RegularExpression Id. */
+  int DIGIT = 60;
+  /** RegularExpression Id. */
+  int INVALID_LEXICAL = 67;
+  /** RegularExpression Id. */
+  int INVALID_CONST = 68;
+  /** RegularExpression Id. */
+  int INVALID_IDCONST = 69;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -153,10 +163,15 @@ public interface GramaticaConstants {
     "\">=\"",
     "\"!=\"",
     "\"+\"",
+    "\"+=\"",
     "\"-\"",
+    "\"-=\"",
     "\"*\"",
+    "\"*=\"",
     "\"/\"",
+    "\"/=\"",
     "\"%\"",
+    "\"%=\"",
     "\"&\"",
     "\">>\"",
     "\"<<\"",
@@ -184,10 +199,10 @@ public interface GramaticaConstants {
     "<DIGIT>",
     "\"/*\"",
     "\"*/\"",
-    "<token of kind 58>",
+    "<token of kind 63>",
     "\"//\"",
-    "<token of kind 60>",
-    "<token of kind 61>",
+    "<token of kind 65>",
+    "<token of kind 66>",
     "<INVALID_LEXICAL>",
     "<INVALID_CONST>",
     "<INVALID_IDCONST>",
