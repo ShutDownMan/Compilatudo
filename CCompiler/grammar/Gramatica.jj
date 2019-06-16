@@ -107,6 +107,8 @@ TOKEN :
 | < ELSE: "else" >
 | < RETURN: "return" >
 | < MAIN: "main" >
+| < INCLUDE: "include" >
+| < DEFINE: "define" >
 | < WHILE: "while" >
 | < VOID: "void" >
 | < CHAR: "char" >
@@ -131,6 +133,8 @@ TOKEN : /* OPERATORS */
 | < ADRESS: "&" >
 | < LEFT_SHIFT: ">>" >
 | < RIGHT_SHIFT: "<<" >
+| < INC: <PLUS> <PLUS> >
+| < DEC: <MINUS> <MINUS> >
 }
 
 TOKEN: /*LOGICAL*/
@@ -219,7 +223,8 @@ SPECIAL_TOKEN:
 	"\t",
 	"\r",
 	"\n",
-	"\f"
+	"\f",
+	"#"
 ])+ ((< LETTER >)+ | (< DIGIT >)+) >
 	{
 	  	System.err.println("Linha: " + input_stream.getEndLine() + " - String Invalida: " + image);
@@ -242,15 +247,25 @@ SPECIAL_TOKEN:
 void program(): { }
 {
     ( LOOKAHEAD(3)var_decl()
-    | LOOKAHEAD(3)func_decl())*
+    | LOOKAHEAD(3)func_decl()
+    | preprocessor()
+    )*
 }
+
+void preprocessor(): { }
+{
+      LOOKAHEAD(3)<HASHTAG> <INCLUDE> "<" <ID>"."<ID> ">"
+    | LOOKAHEAD(3)<HASHTAG> <INCLUDE> "\"" <ID>"."<ID> "\""
+    | LOOKAHEAD(2)<HASHTAG> <DEFINE> <ID> <ID>
+}
+
 
 void func_decl(): { }
 {
-  func_type() (<ID> | <MAIN>) <LPAREN> (parameter_list())? <RPAREN> <LBRACE>
-  body()
-  (return_val())?
-  <RBRACE>
+    func_type() (<ID> | <MAIN>) <LPAREN> (parameter_list())? <RPAREN> <LBRACE>
+    body()
+    (return_val())?
+    <RBRACE>
 }
 
 void func_type(): { }
@@ -276,13 +291,14 @@ void decl(): { }
 void comando(): { }
 {
 	LOOKAHEAD(2)func_call() <SEMICOLON>
-	| var_attr() <SEMICOLON>
+	| LOOKAHEAD(2)var_attr() <SEMICOLON>
 }
 
 void desvio(): { }
 {
-    ifcond()
-	| whilecond()
+    if_cond()
+	| while_cond()
+	| for_cond()
 }
 
 void var_attr():{}
@@ -305,27 +321,18 @@ void var_type(): { }
   < INT > | < DOUBLE > | < CHAR > | < FLOAT >
 }
 
-void whilecond(): { }
+void while_cond(): { }
 {
-	< WHILE > < LPAREN > comp_expression() < RPAREN > < LBRACE >
+	< WHILE > < LPAREN > expr_value() < RPAREN > < LBRACE >
 	body()
 	< RBRACE >
 }
 
-void comp_expression(): {}
+void for_cond(): { }
 {
-	expr_value() (comparador() expr_value())?
-	(combinational() comp_expression())?
-}
-
-void comparador(): { }
-{
-	< GT> | < LT> | < EQ> | < LE> | < GE > | < NE >
-}
-
-void combinational(): { }
-{
-	<AND> | <OR>
+	<FOR> <LPAREN> expr_value() <SEMICOLON> expr_value() <SEMICOLON> expr_value() <RPAREN> <LBRACE>
+	body()
+	<RBRACE>
 }
 
 void num_const(): { }
@@ -335,28 +342,31 @@ void num_const(): { }
 
 void expr_value(): { }
 {
+    (unary())?
     ( num_const()
     | LOOKAHEAD(2)var_attr() | LOOKAHEAD(2)func_call() | <ID>
-    | <LPAREN> expr_value() <RPAREN>
-    )
-    (LOOKAHEAD(2)num_operator() expr_value())?
+    | <string_constant>
+    | <LPAREN> expr_value() <RPAREN>)
+    (LOOKAHEAD(2)unary())?
+    (LOOKAHEAD(2)var_operator() expr_value())?
 }
 
 void var_decl(): {}
 {
-	var_type() (var_attr())? (< COMMA > var_attr())* <SEMICOLON>
+	var_type() (LOOKAHEAD(2)var_attr() | <ID> ) (< COMMA > var_attr())* <SEMICOLON>
 }
 
-void num_operator(): {}
+void var_operator(): {}
 {
     <PLUS> | <MINUS> | <MULTIPLY> | <DIVIDE> | <MOD>
     | <LEFT_SHIFT> | <RIGHT_SHIFT>
-
+    | < GT> | < LT> | < EQ> | < LE> | < GE > | < NE >
+    | <AND> | <OR>
 }
 
-void ifcond(): {}
+void if_cond(): {}
 {
-	<IF> <LPAREN> comp_expression() <RPAREN> <LBRACE>
+	<IF> <LPAREN> expr_value() <RPAREN> <LBRACE>
 	body()
 	< RBRACE >
 }
@@ -364,6 +374,12 @@ void ifcond(): {}
 void return_val(): { }
 {
     <RETURN> (expr_value())? <SEMICOLON>
+}
+
+void unary(): { }
+{
+	<INC> | <DEC>
+
 }
 
 /*void func(): { }

@@ -23,91 +23,99 @@ public interface GramaticaConstants {
   /** RegularExpression Id. */
   int MAIN = 11;
   /** RegularExpression Id. */
-  int WHILE = 12;
+  int INCLUDE = 12;
   /** RegularExpression Id. */
-  int VOID = 13;
+  int DEFINE = 13;
   /** RegularExpression Id. */
-  int CHAR = 14;
+  int WHILE = 14;
   /** RegularExpression Id. */
-  int FOR = 15;
+  int VOID = 15;
   /** RegularExpression Id. */
-  int DOUBLE = 16;
+  int CHAR = 16;
   /** RegularExpression Id. */
-  int ASSIGN = 17;
+  int FOR = 17;
   /** RegularExpression Id. */
-  int GT = 18;
+  int DOUBLE = 18;
   /** RegularExpression Id. */
-  int LT = 19;
+  int ASSIGN = 19;
   /** RegularExpression Id. */
-  int EQ = 20;
+  int GT = 20;
   /** RegularExpression Id. */
-  int LE = 21;
+  int LT = 21;
   /** RegularExpression Id. */
-  int GE = 22;
+  int EQ = 22;
   /** RegularExpression Id. */
-  int NE = 23;
+  int LE = 23;
   /** RegularExpression Id. */
-  int PLUS = 24;
+  int GE = 24;
   /** RegularExpression Id. */
-  int MINUS = 25;
+  int NE = 25;
   /** RegularExpression Id. */
-  int MULTIPLY = 26;
+  int PLUS = 26;
   /** RegularExpression Id. */
-  int DIVIDE = 27;
+  int MINUS = 27;
   /** RegularExpression Id. */
-  int MOD = 28;
+  int MULTIPLY = 28;
   /** RegularExpression Id. */
-  int ADRESS = 29;
+  int DIVIDE = 29;
   /** RegularExpression Id. */
-  int LEFT_SHIFT = 30;
+  int MOD = 30;
   /** RegularExpression Id. */
-  int RIGHT_SHIFT = 31;
+  int ADRESS = 31;
   /** RegularExpression Id. */
-  int AND = 32;
+  int LEFT_SHIFT = 32;
   /** RegularExpression Id. */
-  int OR = 33;
+  int RIGHT_SHIFT = 33;
   /** RegularExpression Id. */
-  int LPAREN = 34;
+  int INC = 34;
   /** RegularExpression Id. */
-  int RPAREN = 35;
+  int DEC = 35;
   /** RegularExpression Id. */
-  int LBRACE = 36;
+  int AND = 36;
   /** RegularExpression Id. */
-  int RBRACE = 37;
+  int OR = 37;
   /** RegularExpression Id. */
-  int LBRACKET = 38;
+  int LPAREN = 38;
   /** RegularExpression Id. */
-  int RBRACKET = 39;
+  int RPAREN = 39;
   /** RegularExpression Id. */
-  int SEMICOLON = 40;
+  int LBRACE = 40;
   /** RegularExpression Id. */
-  int COMMA = 41;
+  int RBRACE = 41;
   /** RegularExpression Id. */
-  int DOT = 42;
+  int LBRACKET = 42;
   /** RegularExpression Id. */
-  int HASHTAG = 43;
+  int RBRACKET = 43;
   /** RegularExpression Id. */
-  int int_constant = 44;
+  int SEMICOLON = 44;
   /** RegularExpression Id. */
-  int float_constant = 45;
+  int COMMA = 45;
   /** RegularExpression Id. */
-  int null_constant = 46;
+  int DOT = 46;
   /** RegularExpression Id. */
-  int char_constant = 47;
+  int HASHTAG = 47;
   /** RegularExpression Id. */
-  int string_constant = 48;
+  int int_constant = 48;
   /** RegularExpression Id. */
-  int ID = 49;
+  int float_constant = 49;
   /** RegularExpression Id. */
-  int LETTER = 50;
+  int null_constant = 50;
   /** RegularExpression Id. */
-  int DIGIT = 51;
+  int char_constant = 51;
   /** RegularExpression Id. */
-  int INVALID_LEXICAL = 58;
+  int string_constant = 52;
   /** RegularExpression Id. */
-  int INVALID_CONST = 59;
+  int ID = 53;
   /** RegularExpression Id. */
-  int INVALID_IDCONST = 60;
+  int LETTER = 54;
+  /** RegularExpression Id. */
+  int DIGIT = 55;
+  /** RegularExpression Id. */
+  int INVALID_LEXICAL = 62;
+  /** RegularExpression Id. */
+  int INVALID_CONST = 63;
+  /** RegularExpression Id. */
+  int INVALID_IDCONST = 64;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -130,6 +138,8 @@ public interface GramaticaConstants {
     "\"else\"",
     "\"return\"",
     "\"main\"",
+    "\"include\"",
+    "\"define\"",
     "\"while\"",
     "\"void\"",
     "\"char\"",
@@ -150,6 +160,8 @@ public interface GramaticaConstants {
     "\"&\"",
     "\">>\"",
     "\"<<\"",
+    "<INC>",
+    "<DEC>",
     "\"&&\"",
     "\"||\"",
     "\"(\"",
@@ -172,13 +184,14 @@ public interface GramaticaConstants {
     "<DIGIT>",
     "\"/*\"",
     "\"*/\"",
-    "<token of kind 54>",
+    "<token of kind 58>",
     "\"//\"",
-    "<token of kind 56>",
-    "<token of kind 57>",
+    "<token of kind 60>",
+    "<token of kind 61>",
     "<INVALID_LEXICAL>",
     "<INVALID_CONST>",
     "<INVALID_IDCONST>",
+    "\"\\\"\"",
   };
 
 }
