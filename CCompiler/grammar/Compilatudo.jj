@@ -17,7 +17,7 @@ import java.util.Scanner;
 import recovery.*;
 
 public class Compilatudo {
-    boolean debug_recovery;
+    boolean debug_recovery = true;
     int countParseError = 0;
 
     public static void main(String[] args) throws ParseException {
@@ -43,9 +43,9 @@ public class Compilatudo {
             if (parser != null) {
                 parser.program();
             }
-        } catch(ParseException e) {
-            System.err.println(e.getMessage());
-            parser.countParseError = 1;
+        }
+        catch(ParseEOFException e) {
+            System.out.println(e.getMessage());
         } finally {
             if (parser != null) {
                 if(parser.token_source.foundLexError() != 0) {
@@ -79,15 +79,15 @@ public class Compilatudo {
         return s;
     }
 
-    boolean eof;
+    boolean eof = false;
 
-    void consumeUntil(RecoverySet g, ParseException e, String met) throws ParseException {
+    void consumeUntil(RecoverySet g, ParseException e, String met) throws ParseEOFException, ParseException {
         Token tok;
 
         if (debug_recovery) { // informação sobre a recuperação
             System.out.println();
             System.out.println("***" + met + "***");
-            System.out.println( " sincronizando Set: " + g);
+            System.out.println( " sincronizando conjunto: " + g);
         }
         if (g == null) throw e; // se o conjunto for nulo, propaga a exceção
 
@@ -95,19 +95,21 @@ public class Compilatudo {
         while (!eof) {// se não chegou ao fim do arquivo
             if(g.contains(tok.kind) ) {// achou o token conjunto
                 if (debug_recovery)
-                    System.out.println ( "	Achou o token de sincronização : " + im(tok.kind));
+                    System.out.println ("\tAchou o token de sincronização : " + im(tok.kind));
                 break;
             }
             if (debug_recovery)
                 System.out.println("  ignorando token : " + im(tok.kind));
             getNextToken();
             tok = getToken(1);
+            if (debug_recovery)
+                System.out.println("  prox token : " + im(tok.kind));
             if (tok.kind == EOF && g.contains(EOF)) // fim da entrada
                 eof = true;
         }
         System.out.println(e.getMessage());
         countParseError++; // incrementa o numero de erros
-//        if (eof) throw new ParseEOFException("EOF achado prematuramente.");
+        if (eof) throw new ParseEOFException("EOF achado prematuramente.");
 
     }
 
@@ -283,26 +285,32 @@ SPECIAL_TOKEN:
 	}
 }
 
-void program():
+void program() throws ParseEOFException :
 {
     RecoverySet g = new RecoverySet(EOF);
 }
 {
     try {
-        ( preprocessor()
-        | LOOKAHEAD(3)var_decl()
-        | LOOKAHEAD(3)func_decl() )*
+        ( preprocessor(g)
+        | LOOKAHEAD(3)func_decl()
+        | var_decl() )*
         <EOF>
     } catch(ParseException e) {
         consumeUntil(g, e, "program");
     }
 }
 
-void preprocessor(): { }
+void preprocessor(RecoverySet g): {
+}
 {
-      LOOKAHEAD(3)<HASHTAG> <INCLUDE> "<" <ID>"."<ID> ">"
-    | LOOKAHEAD(3)<HASHTAG> <INCLUDE> "\"" <ID>"."<ID> "\""
-    | LOOKAHEAD(2)<HASHTAG> <DEFINE> <ID> <ID>
+    try {
+          LOOKAHEAD(3)<HASHTAG> <INCLUDE> "<" <ID>"."<ID> ">"
+        | LOOKAHEAD(3)<HASHTAG> <INCLUDE> "\"" <ID>"."<ID> "\""
+        | LOOKAHEAD(2)<HASHTAG> <DEFINE> <ID> <ID>
+    } catch(ParseException e) {
+
+    }
+
 }
 
 
