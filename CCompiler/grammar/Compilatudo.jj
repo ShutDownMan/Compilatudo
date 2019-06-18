@@ -17,7 +17,8 @@ import java.util.Scanner;
 import recovery.*;
 
 public class Compilatudo {
-    boolean debug_recovery = true;
+    public static boolean debug_messages = true;
+    public static boolean debug_recovery = true;
     int countParseError = 0;
 
     public static void main(String[] args) throws ParseException {
@@ -36,7 +37,8 @@ public class Compilatudo {
         try {
             parser = new Compilatudo(new java.io.FileInputStream(nome_arquivo));
         } catch(java.io.FileNotFoundException e) {
-            System.out.println(e.getMessage());
+            if(debug_messages)
+                System.out.println(e.getMessage());
         }
 
         try {
@@ -47,7 +49,7 @@ public class Compilatudo {
         catch(ParseEOFException e) {
             System.out.println(e.getMessage());
         } finally {
-            if (parser != null) {
+            if (parser != null && debug_messages) {
                 if(parser.token_source.foundLexError() != 0) {
                     System.out.println("Total de erros lexicos: " + parser.token_source.foundLexError());
                 } else {
@@ -73,7 +75,8 @@ public class Compilatudo {
         try {
             s = s.substring(1, k);
         } catch(StringIndexOutOfBoundsException e) {
-            System.out.println(e.getMessage());
+            if(debug_messages)
+                System.out.println(e.getMessage());
         }
 
         return s;
@@ -103,11 +106,12 @@ public class Compilatudo {
             getNextToken();
             tok = getToken(1);
             if (debug_recovery)
-                System.out.println("  prox token : " + im(tok.kind));
+                System.out.println("    token atual : " + im(tok.kind));
             if (tok.kind == EOF && g.contains(EOF)) // fim da entrada
                 eof = true;
         }
-        System.out.println(e.getMessage());
+        if(debug_messages)
+            System.out.println(e.getMessage());
         countParseError++; // incrementa o numero de erros
         if (eof) throw new ParseEOFException("EOF achado prematuramente.");
 
@@ -268,26 +272,26 @@ SPECIAL_TOKEN:
 	"#"
 ])+ ((< LETTER >)+ | (< DIGIT >)+) >
 	{
-	  	System.err.println("Linha: " + input_stream.getEndLine() + " - String Invalida: " + image);
+//	  	System.err.println("Linha: " + input_stream.getEndLine() + " - String Invalida: " + image);
 	  	countLexError++;
 	}
 |
 	< INVALID_CONST: "\"" (~ ["\r", "\n", "\""])* ["\r", "\n"] >
 	{
-	  System.err.println("Linha: " + input_stream.getEndLine() + " - String constante Invalida: " + image);
+//	  System.err.println("Linha: " + input_stream.getEndLine() + " - String constante Invalida: " + image);
 	  countLexError++;
 	}
 |
 	< INVALID_IDCONST: (< DIGIT >)+(< LETTER >)+>
 	{
-	  System.err.println("Linha: " + input_stream.getEndLine() + " - Identificador/Constante errado: " + image);
+//	  System.err.println("Linha: " + input_stream.getEndLine() + " - Identificador/Constante errado: " + image);
 	  countLexError++;
 	}
 }
 
 void program() throws ParseEOFException :
 {
-    RecoverySet g = new RecoverySet(EOF);
+    RecoverySet g = First.program;
 }
 {
     try {
@@ -300,15 +304,16 @@ void program() throws ParseEOFException :
     }
 }
 
-void preprocessor(RecoverySet g): {
-}
+void preprocessor(RecoverySet g) throws ParseEOFException : { }
 {
     try {
           LOOKAHEAD(3)<HASHTAG> <INCLUDE> "<" <ID>"."<ID> ">"
         | LOOKAHEAD(3)<HASHTAG> <INCLUDE> "\"" <ID>"."<ID> "\""
         | LOOKAHEAD(2)<HASHTAG> <DEFINE> <ID> <ID>
     } catch(ParseException e) {
-
+            consumeUntil(g, e, "preprocessor");
+    } finally {
+         System.out.print("}");
     }
 
 }
